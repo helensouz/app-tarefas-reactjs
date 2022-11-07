@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import "./App.css";
-import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
-
+import Header from "./components/Header";
+import  Tasks from "./components/Tasks";
+import TaskDetails from "./components/TaskDetails";
+import {
+  BrowserRouter,
+  Route,
+} from "react-router-dom";
 import {v4 as uuidv4} from 'uuid'
+import axios from  'axios';
+import { useEffect } from "react";
 
 const App = () => {
 
@@ -26,7 +33,20 @@ const App = () => {
       description: 'estou jogando League of legends ',
       completed: true
     },
-  ])
+  ]);
+
+
+  useEffect(() => { //ira executar sempre que algo mudar
+    const fetchTask = async () => {
+      const {data} = await axios.get("https://jsonplaceholder.cypress.io/todos?_limit=10")
+
+      setTasks(data)
+
+    }
+    fetchTask()
+
+
+  }, [])
 
   const handleTaskClick = (taskId) => {
     const newTasks = tasks.map(task => {
@@ -50,18 +70,48 @@ const App = () => {
 
     setTasks(newTasks)
   }
+
+  const handleTaskDelete = (taskId) => {
+    const newTasks = tasks.filter((task) => task.id !== taskId)
+
+    setTasks(newTasks)
+  }
   
   return (
-    <>
-          <div className="container">
-          <AddTask handleTaskAdd={handleTaskAdd}/>
-          <Tasks tasks={tasks} handleTaskClick={handleTaskClick}/>
-          
+    
+    <BrowserRouter>
 
-          </div>
-      
-    </>
+     <div className="container">
+     <Header />
+    
+        
+    
+      <Route path="/" 
+            exact
+                render={() => (
+                  <>
+                   <AddTask handleTaskAdd={handleTaskAdd}/>
+                   <Tasks
+                  tasks={tasks}
+                    handleTaskClick={handleTaskClick}
+                   handleTaskDelete={handleTaskDelete}
+                   />
+                  </>
+                )}
+                />
+
+                <Route path="/:taskTitle"  exact component={TaskDetails}/>
+   
+   
+           </div> 
+          </BrowserRouter>
+    
   )
+
+  // <AddTask handleTaskAdd={handleTaskAdd}/>
+  // <Tasks tasks={tasks}
+  // handleTaskClick={handleTaskClick}
+  // handleTaskDelete={handleTaskDelete}/>
 
   
 }

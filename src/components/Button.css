@@ -10,3 +10,9 @@
     cursor: pointer;
     border: none;
 }
+
+.button-save-task:hover{
+    background-color: #444;
+    color: chartreuse;
+    transition: 0.5s;
+}

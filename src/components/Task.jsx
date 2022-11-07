@@ -1,7 +1,17 @@
 import React from 'react'
 import "./Task.css"
+import {CgInfo} from 'react-icons/cg'
+import { useHistory } from 'react-router-dom'
 
-const Task = ({ task, handleTaskClick }) => {
+const Task = ({ task, handleTaskClick, handleTaskDelete }) => {
+
+    const history = useHistory();
+
+    const handleTaskDetailsClick = () => {
+        history.push(`/${task.title}`)
+    }
+
+    
     return (
         <div
          className="task-container"
@@ -13,16 +23,19 @@ const Task = ({ task, handleTaskClick }) => {
             </div>
 
             <div className="buttons-container">
-                <button className="remove-task-button">X</button>
+                <button className="remove-task-button"
+                 onClick={() => handleTaskDelete(task.id)}>X</button>
+
+            <button className="see-task-details"
+                onClick={handleTaskDetailsClick}
+                 >
+                    <CgInfo />
+                    </button>
             </div>
 
         </div>
 
-        // <div className='task-container'>
-        // <p>{task.title}</p>  
-
-
-        // </div>
+        
     )
      
 }
